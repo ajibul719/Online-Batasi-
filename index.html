@@ -1,1901 +1,545 @@
-<!DOCTYPE html>
-<html lang="bn">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<meta name="description" content="Online Batasi - Digital Service Centre">
-<title>Online Batasi | Digital Service Centre</title>
-
-<!-- Supabase -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<style>
-:root{
-  --blue:#0757c9;
-  --blue2:#0b8ff2;
-  --dark:#10233f;
-  --bg:#f4f8fd;
-  --green:#16a34a;
-  --red:#dc2626;
-  --white:#fff;
-}
-
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-}
-
-html{
-  scroll-behavior:smooth;
-}
-
-body{
-  font-family:Arial,"Noto Sans Bengali",sans-serif;
-  background:var(--bg);
-  color:#172033;
-  line-height:1.6;
-}
-
-/* HEADER */
-header{
-  position:sticky;
-  top:0;
-  z-index:100;
-  background:linear-gradient(135deg,var(--blue),var(--blue2));
-  color:#fff;
-  box-shadow:0 4px 18px #0002;
-}
-
-.nav{
-  max-width:1200px;
-  margin:auto;
-  padding:14px 5%;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-}
-
-.logo{
-  font-size:24px;
-  font-weight:900;
-}
-
-nav a{
-  color:#fff;
-  text-decoration:none;
-  margin-left:18px;
-  font-weight:700;
-}
-
-/* AUTH */
-.auth-section{
-  min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:30px 15px;
-  background:
-    radial-gradient(circle at top,#dceeff,transparent 40%),
-    linear-gradient(135deg,#eef7ff,#fff);
-}
-
-.auth-box{
-  width:100%;
-  max-width:430px;
-  background:#fff;
-  padding:30px;
-  border-radius:22px;
-  box-shadow:0 15px 50px #0b57c929;
-  animation:fadeUp .7s ease;
-}
-
-.auth-logo{
-  text-align:center;
-  font-size:30px;
-  font-weight:900;
-  color:var(--blue);
-  margin-bottom:5px;
-}
-
-.auth-subtitle{
-  text-align:center;
-  color:#66758a;
-  margin-bottom:25px;
-}
-
-.auth-box h2{
-  text-align:center;
-  margin-bottom:20px;
-}
-
-.auth-box label{
-  display:block;
-  font-weight:700;
-  margin:12px 0 5px;
-}
-
-.auth-box input{
-  width:100%;
-  padding:13px;
-  border:1px solid #ccd8e6;
-  border-radius:9px;
-  font-size:15px;
-  outline:none;
-}
-
-.auth-box input:focus{
-  border-color:var(--blue);
-  box-shadow:0 0 0 3px #0757c915;
-}
-
-.auth-btn{
-  width:100%;
-  padding:13px;
-  border:0;
-  border-radius:9px;
-  margin-top:18px;
-  background:linear-gradient(135deg,var(--blue),var(--blue2));
-  color:white;
-  font-size:16px;
-  font-weight:800;
-  cursor:pointer;
-}
-
-.auth-btn:hover{
-  opacity:.92;
-}
-
-.auth-link{
-  text-align:center;
-  margin-top:15px;
-  color:var(--blue);
-  cursor:pointer;
-  font-weight:700;
-}
-
-.message{
-  margin-top:15px;
-  padding:10px;
-  border-radius:8px;
-  display:none;
-  text-align:center;
-  font-size:14px;
-}
-
-.message.success{
-  display:block;
-  background:#dcfce7;
-  color:#166534;
-}
-
-.message.error{
-  display:block;
-  background:#fee2e2;
-  color:#991b1b;
-}
-
-/* DASHBOARD */
-#mainSite{
-  display:none;
-}
-
-.user-bar{
-  background:#fff;
-  padding:12px 5%;
-  border-bottom:1px solid #e5edf6;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-}
-
-.user-info{
-  font-weight:700;
-  color:#34445a;
-}
-
-.logout-btn{
-  background:var(--red);
-  color:#fff;
-  border:0;
-  border-radius:8px;
-  padding:8px 14px;
-  font-weight:700;
-  cursor:pointer;
-}
-
-/* HERO */
-.hero{
-  background:linear-gradient(135deg,#e8f3ff,#fff);
-  text-align:center;
-  padding:70px 5% 60px;
-}
-
-.hero h1{
-  font-size:46px;
-  color:var(--blue);
-  margin-bottom:8px;
-}
-
-.hero h2{
-  font-size:23px;
-  margin-bottom:12px;
-}
-
-.hero p{
-  max-width:760px;
-  margin:0 auto 22px;
-  color:#5b687a;
-  font-size:17px;
-}
-
-.btn{
-  display:inline-block;
-  padding:12px 19px;
-  border-radius:9px;
-  text-decoration:none;
-  font-weight:800;
-  margin:5px;
-  border:0;
-  cursor:pointer;
-}
-
-.call{
-  background:var(--blue);
-  color:#fff;
-}
-
-.wa{
-  background:var(--green);
-  color:#fff;
-}
-
-/* SECTIONS */
-section{
-  max-width:1200px;
-  margin:auto;
-  padding:55px 5%;
-}
-
-.title{
-  text-align:center;
-  color:var(--blue);
-  font-size:30px;
-  margin-bottom:28px;
-}
-
-/* SEARCH */
-.search-box{
-  max-width:650px;
-  margin:0 auto 30px;
-}
-
-.search-box input{
-  width:100%;
-  padding:15px 18px;
-  border:1px solid #ccd8e6;
-  border-radius:12px;
-  font-size:16px;
-}
-
-/* CATEGORY */
-.categories{
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-  gap:10px;
-  margin-bottom:30px;
-}
-
-.category-btn{
-  border:1px solid #c9d9ec;
-  background:#fff;
-  padding:9px 15px;
-  border-radius:20px;
-  cursor:pointer;
-  font-weight:700;
-  color:#34445a;
-}
-
-.category-btn.active,
-.category-btn:hover{
-  background:var(--blue);
-  color:#fff;
-}
-
-/* CARDS */
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
-  gap:18px;
-}
-
-.card{
-  background:#fff;
-  border:1px solid #e4edf7;
-  border-radius:16px;
-  padding:22px;
-  box-shadow:0 6px 20px #163b6612;
-  transition:.2s;
-}
-
-.card:hover{
-  transform:translateY(-4px);
-}
-
-.icon{
-  font-size:36px;
-}
-
-.card h3{
-  margin:8px 0;
-}
-
-.card p{
-  color:#66758a;
-  font-size:14px;
-}
-
-.price{
-  font-weight:800;
-  color:var(--blue);
-  margin-top:7px;
-}
-
-/* OFFICIAL LINKS */
-.link-card{
-  background:#fff;
-  border-radius:15px;
-  padding:20px;
-  box-shadow:0 6px 20px #163b6612;
-}
-
-.link-card h3{
-  margin-bottom:8px;
-}
-
-.link-card a{
-  color:var(--blue);
-  font-weight:700;
-  text-decoration:none;
-}
-
-/* FORM */
-.formbox{
-  background:#fff;
-  border-radius:16px;
-  padding:25px;
-  box-shadow:0 6px 20px #163b6612;
-  max-width:720px;
-  margin:auto;
-}
-
-.formbox label{
-  display:block;
-  font-weight:700;
-  margin:12px 0 5px;
-}
-
-.formbox input,
-.formbox select,
-.formbox textarea{
-  width:100%;
-  padding:12px;
-  border:1px solid #ccd8e6;
-  border-radius:8px;
-  font-size:15px;
-}
-
-.formbox textarea{
-  min-height:100px;
-  resize:vertical;
-}
-
-.submit{
-  width:100%;
-  background:var(--green);
-  color:#fff;
-  font-size:16px;
-}
-
-.small{
-  font-size:12px;
-  color:#738095;
-  margin-top:10px;
-}
-
-/* NOTICE */
-.notice{
-  background:#fff;
-  padding:22px;
-  border-radius:16px;
-  box-shadow:0 6px 20px #163b6612;
-}
-
-.notice li{
-  list-style:none;
-  background:#eef6ff;
-  border-left:4px solid var(--blue);
-  padding:12px;
-  margin:10px 0;
-  border-radius:5px;
-}
-
-/* CONTACT */
-.contact{
-  max-width:none;
-  background:var(--dark);
-  color:#fff;
-  text-align:center;
-}
-
-.contact .title{
-  color:#fff;
-}
-
-.contact p{
-  margin:6px;
-}
-
-/* FOOTER */
-footer{
-  background:#08172b;
-  color:#cbd6e6;
-  text-align:center;
-  padding:20px;
-  font-size:14px;
-}
-
-/* WELCOME */
-.welcome{
-  position:fixed;
-  inset:0;
-  z-index:9999;
-  background:linear-gradient(135deg,var(--blue),var(--blue2));
-  color:#fff;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  text-align:center;
-  animation:welcomeOut 1s ease 2.3s forwards;
-}
-
-.welcome-content{
-  animation:welcomeIn 1s ease;
-}
-
-.welcome h1{
-  font-size:48px;
-  font-weight:900;
-}
-
-.welcome p{
-  font-size:18px;
-  margin-top:5px;
-}
-
-.loader{
-  width:45px;
-  height:45px;
-  border:4px solid #ffffff55;
-  border-top-color:#fff;
-  border-radius:50%;
-  margin:25px auto 0;
-  animation:spin 1s linear infinite;
-}
-
-@keyframes spin{
-  to{transform:rotate(360deg)}
-}
-
-@keyframes welcomeIn{
-  from{opacity:0;transform:scale(.8)}
-  to{opacity:1;transform:scale(1)}
-}
-
-@keyframes welcomeOut{
-  to{
-    opacity:0;
-    visibility:hidden;
-  }
-}
-
-@keyframes fadeUp{
-  from{
-    opacity:0;
-    transform:translateY(20px);
-  }
-  to{
-    opacity:1;
-    transform:translateY(0);
-  }
-}
-
-@media(max-width:700px){
-
-  nav{
-    display:none;
-  }
-
-  .hero{
-    padding:50px 5%;
-  }
-
-  .hero h1{
-    font-size:35px;
-  }
-
-  .hero h2{
-    font-size:20px;
-  }
-
-  section{
-    padding:42px 5%;
-  }
-
-  .title{
-    font-size:26px;
-  }
-
-  .welcome h1{
-    font-size:38px;
-  }
-
-  .user-bar{
-    flex-direction:column;
-    align-items:stretch;
-    text-align:center;
-  }
-}
-</style>
-</head>
-
-<body>
-
-<!-- WELCOME SCREEN -->
-<div class="welcome" id="welcomeScreen">
-  <div class="welcome-content">
-    <h1>ONLINE BATASI</h1>
-    <p>Digital Service Centre</p>
-    <div class="loader"></div>
-  </div>
-</div>
-
-
-<!-- LOGIN / REGISTER -->
-<div class="auth-section" id="authSection">
-
-  <div class="auth-box">
-
-    <div class="auth-logo">ONLINE BATASI</div>
-    <div class="auth-subtitle">Digital Service Centre</div>
-
-    <!-- LOGIN -->
-    <div id="loginBox">
-
-      <h2>🔐 Login</h2>
-
-      <label>Email</label>
-      <input
-        type="email"
-        id="loginEmail"
-        placeholder="আপনার Email লিখুন"
-      >
-
-      <label>Password</label>
-      <input
-        type="password"
-        id="loginPassword"
-        placeholder="Password লিখুন"
-      >
-
-      <button class="auth-btn" onclick="loginUser()">
-        Login
-      </button>
-
-      <div class="auth-link" onclick="showRegister()">
-        নতুন account তৈরি করুন
-      </div>
-
-      <div class="auth-link" onclick="forgotPassword()">
-        Password ভুলে গেছেন?
-      </div>
-
-      <div id="loginMessage" class="message"></div>
-
-    </div>
-
-
-    <!-- REGISTER -->
-    <div id="registerBox" style="display:none">
-
-      <h2>📝 Register</h2>
-
-      <label>আপনার নাম</label>
-      <input
-        type="text"
-        id="registerName"
-        placeholder="নাম লিখুন"
-      >
-
-      <label>Email</label>
-      <input
-        type="email"
-        id="registerEmail"
-        placeholder="Email লিখুন"
-      >
-
-      <label>Password</label>
-      <input
-        type="password"
-        id="registerPassword"
-        placeholder="কমপক্ষে 6 অক্ষরের Password"
-      >
-
-      <button class="auth-btn" onclick="registerUser()">
-        Register
-      </button>
-
-      <div class="auth-link" onclick="showLogin()">
-        আগে থেকেই account আছে? Login
-      </div>
-
-      <div id="registerMessage" class="message"></div>
-
-    </div>
-
-  </div>
-
-</div>
-
-
-<!-- MAIN WEBSITE -->
-<div id="mainSite">
-
-<header>
-
-  <div class="nav">
-
-    <div class="logo">
-      ONLINE BATASI
-    </div>
-
-    <nav>
-      <a href="#home">Home</a>
-      <a href="#services">Services</a>
-      <a href="#official">Official Links</a>
-      <a href="#apply">Apply</a>
-      <a href="#updates">Updates</a>
-      <a href="#contact">Contact</a>
-    </nav>
-
-  </div>
-
-</header>
-
-
-<!-- USER BAR -->
-<div class="user-bar">
-
-  <div class="user-info">
-    👤 Welcome, <span id="userEmail"></span>
-  </div>
-
-  <button class="logout-btn" onclick="logoutUser()">
-    Logout
-  </button>
-
-</div>
-
-
-<!-- HOME -->
-<section class="hero" id="home">
-
-  <h1>ONLINE BATASI</h1>
-
-  <h2>Digital Service Centre</h2>
-
-  <p>
-    অনলাইনে বিভিন্ন আবেদন, ফর্ম ফিল-আপ,
-    সরকারি পরিষেবা ও Digital Service Assistance
-    এক জায়গায়।
-  </p>
-
-  <a
-    class="btn wa"
-    href="https://wa.me/919064039205?text=Hello%20Online%20Batasi,%20I%20need%20online%20service."
-    target="_blank"
-  >
-    💬 WhatsApp
-  </a>
-
-  <a
-    class="btn call"
-    href="tel:+919064039205"
-  >
-    📞 Call Now
-  </a>
-
-</section>
-
-
-<!-- SERVICES -->
-<section id="services">
-
-  <h2 class="title">
-    আমাদের Online Services
-  </h2>
-
-
-  <!-- SEARCH -->
-  <div class="search-box">
-
-    <input
-      type="search"
-      id="serviceSearch"
-      placeholder="🔍 Service Search করুন..."
-      onkeyup="searchServices()"
-    >
-
-  </div>
-
-
-  <!-- CATEGORIES -->
-  <div class="categories">
-
-    <button class="category-btn active"
-      onclick="filterCategory('all',this)">
-      All
-    </button>
-
-    <button class="category-btn"
-      onclick="filterCategory('identity',this)">
-      🪪 ID Services
-    </button>
-
-    <button class="category-btn"
-      onclick="filterCategory('education',this)">
-      🎓 Education
-    </button>
-
-    <button class="category-btn"
-      onclick="filterCategory('government',this)">
-      🏛️ Government
-    </button>
-
-    <button class="category-btn"
-      onclick="filterCategory('job',this)">
-      💼 Jobs
-    </button>
-
-    <button class="category-btn"
-      onclick="filterCategory('certificate',this)">
-      📄 Certificate
-    </button>
-
-    <button class="category-btn"
-      onclick="filterCategory('health',this)">
-      🏥 Health
-    </button>
-
-    <button class="category-btn"
-      onclick="filterCategory('business',this)">
-      🏢 Business
-    </button>
-
-  </div>
-
-
-  <div class="grid" id="serviceGrid">
-
-
-    <div class="card service-card" data-category="identity">
-
-      <div class="icon">🪪</div>
-
-      <h3>Aadhaar Assistance</h3>
-
-      <p>
-        Aadhaar-related online assistance
-        and guidance.
-      </p>
-
-      <div class="price">
-        Service charge: Contact us
-      </div>
-
-      <a class="btn call" href="#apply">
-        Apply Now
-      </a>
-
-    </div>
-
-
-    <div class="card service-card" data-category="identity">
-
-      <div class="icon">💳</div>
-
-      <h3>PAN Card</h3>
-
-      <p>
-        New PAN, correction, download
-        and assistance.
-      </p>
-
-      <div class="price">
-        Service charge: Contact us
-      </div>
-
-      <a class="btn call" href="#apply">
-        Apply Now
-      </a>
-
-    </div>
-
-
-    <div class="card service-card" data-category="identity">
-
-      <div class="icon">🗳️</div>
-
-      <h3>Voter Card</h3>
-
-      <p>
-        Registration, correction and
-        status assistance.
-      </p>
-
-      <div class="price">
-        Service charge: Contact us
-      </div>
-
-      <a class="btn call" href="#apply">
-        Apply Now
-      </a>
-
-    </div>
-
-
-    <div class="card service-card" data-category="government">
-
-      <div class="icon">🍚</div>
-
-      <h3>Ration Card</h3>
-
-      <p>
-        Application, correction and
-        status assistance.
-      </p>
-
-      <div class="price">
-        Service charge: Contact us
-      </div>
-
-      <a class="btn call" href="#apply">
-        Apply Now
-      </a>
-
-    </div>
-
-
-    <div class="card service-card" data-category="education">
-
-      <div class="icon">🎓</div>
-
-      <h3>Scholarship</h3>
-
-      <p>
-        Scholarship form filling and
-        document guidance.
-      </p>
-
-      <div class="price">
-        Service charge: Contact us
-      </div>
-
-      <a class="btn call" href="#apply">
-        Apply Now
-      </a>
-
-    </div>
-
-
-    <div class="card service-card" data-category="education">
-
-      <div class="icon">📚</div>
-
-      <h3>School & College</h3>
-
-      <p>
-        Admission, forms, result,
-        admit card and online assistance.
-      </p>
-
-      <div class="price">
-        Service charge: Contact us
-      </div>
-
-      <a class="btn call" href="#apply">
-        Apply Now
-      </a>
-
-    </div>
-
-
-    <div class="card service-card" data-category="government">
-
-      <div class="icon">📄</div>
-
-      <h3>Government Forms</h3>
-
-      <p>
-        Online form filling and
-        application assistance.
-      </p>
-
-      <div class="price">
-        Service charge: Contact us
-      </div>
-
-      <a class="btn call" href="#apply">
-        Apply Now
-      </a>
-
-    </div>
-
-
-    <div class="card service-card" data-category="certificate">
-
-      <div class="icon">🏠</div>
-
-      <h3>Certificates</h3>
-
-      <p>
-        Income, residence, caste,
-        domicile and other certificates.
-      </p>
-
-      <div class="price">
-        Service charge: Contact us
-      </div>
-
-      <a class="btn call" href="#apply">
-        Apply Now
-      </a>
-
-    </div>
-
-
-    <div class="card service-card" data-category="government">
-
-      <div class="icon">🚗</div>
-
-      <h3>Driving Licence</h3>
-
-      <p>
-        Learner licence, driving licence
-        and status guidance.
-      </p>
-
-      <div class="price">
-        Service charge: Contact us
-      </div>
-
-      <a class="btn call" href="#apply">
-        Apply Now
-      </a>
-
-    </div>
-
-
-    <div class="card service-card" data-category="business">
-
-      <div class="icon">💼</div>
-
-      <h3>Udyam Registration</h3>
-
-      <p>
-        Online registration assistance
-        for eligible applicants.
-      </p>
-
-      <div class="price">
-        Service charge: Contact us
-      </div>
-
-      <a class="btn call" href="#apply">
-        Apply Now
-      </a>
-
-    </div>
-
-
-    <div class="card service-card" data-category="government">
-
-      <div class="icon">👷</div>
-
-      <h3>e-Shram</h3>
-
-      <p>
-        e-Shram related online assistance
-        and guidance.
-      </p>
-
-      <div class="price">
-        Service charge: Contact us
-      </div>
-
-      <a class="btn call" href="#apply">
-        Apply Now
-      </a>
-
-    </div>
-
-
-    <div class="card service-card" data-category="health">
-
-      <div class="icon">🏥</div>
-
-      <h3>Ayushman Assistance</h3>
-
-      <p>
-        Ayushman-related status and
-        online service assistance.
-      </p>
-
-      <div class="price">
-        Service charge: Contact us
-      </div>
-
-      <a class="btn call" href="#apply">
-        Apply Now
-      </a>
-
-    </div>
-
-
-    <div class="card service-card" data-category="job">
-
-      <div class="icon">💼</div>
-
-      <h3>Job Application</h3>
-
-      <p>
-        Online job form filling,
-        registration and assistance.
-      </p>
-
-      <div class="price">
-        Service charge: Contact us
-      </div>
-
-      <a class="btn call" href="#apply">
-        Apply Now
-      </a>
-
-    </div>
-
-
-    <div class="card service-card" data-category="government">
-
-      <div class="icon">🔍</div>
-
-      <h3>Status Check</h3>
-
-      <p>
-        Supported applications-এর
-        status-check guidance.
-      </p>
-
-      <div class="price">
-        Contact us
-      </div>
-
-      <a class="btn call" href="#apply">
-        Apply Now
-      </a>
-
-    </div>
-
-
-    <div class="card service-card" data-category="education">
-
-      <div class="icon">📋</div>
-
-      <h3>Admit Card / Result</h3>
-
-      <p>
-        Admit card, result এবং
-        download assistance.
-      </p>
-
-      <div class="price">
-        Service charge: Contact us
-      </div>
-
-      <a class="btn call" href="#apply">
-        Apply Now
-      </a>
-
-    </div>
-
-
-    <div class="card service-card" data-category="government">
-
-      <div class="icon">📥</div>
-
-      <h3>PDF / Form Download</h3>
-
-      <p>
-        প্রয়োজনীয় সরকারি PDF ও
-        form download assistance.
-      </p>
-
-      <div class="price">
-        Service charge: Contact us
-      </div>
-
-      <a class="btn call" href="#apply">
-        Apply Now
-      </a>
-
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- OFFICIAL LINKS -->
-<section id="official">
-
-  <h2 class="title">
-    Official Website Links
-  </h2>
-
-  <div class="grid">
-
-    <div class="link-card">
-      <h3>🪪 Aadhaar</h3>
-      <p>Official UIDAI website</p>
-      <a href="https://uidai.gov.in/" target="_blank">
-        Open Official Website →
-      </a>
-    </div>
-
-
-    <div class="link-card">
-      <h3>💳 PAN Card</h3>
-      <p>Income Tax PAN services</p>
-      <a href="https://www.incometax.gov.in/" target="_blank">
-        Open Official Website →
-      </a>
-    </div>
-
-
-    <div class="link-card">
-      <h3>🗳️ Voter</h3>
-      <p>Election Commission services</p>
-      <a href="https://voters.eci.gov.in/" target="_blank">
-        Open Official Website →
-      </a>
-    </div>
-
-
-    <div class="link-card">
-      <h3>🍚 Ration Card</h3>
-      <p>West Bengal Food & Supplies</p>
-      <a href="https://food.wb.gov.in/" target="_blank">
-        Open Official Website →
-      </a>
-    </div>
-
-
-    <div class="link-card">
-      <h3>👷 e-Shram</h3>
-      <p>Official e-Shram portal</p>
-      <a href="https://eshram.gov.in/" target="_blank">
-        Open Official Website →
-      </a>
-    </div>
-
-
-    <div class="link-card">
-      <h3>💼 Udyam</h3>
-      <p>Official MSME registration</p>
-      <a href="https://udyamregistration.gov.in/" target="_blank">
-        Open Official Website →
-      </a>
-    </div>
-
-
-    <div class="link-card">
-      <h3>🏥 Ayushman Bharat</h3>
-      <p>Official PM-JAY portal</p>
-      <a href="https://pmjay.gov.in/" target="_blank">
-        Open Official Website →
-      </a>
-    </div>
-
-
-    <div class="link-card">
-      <h3>🚗 Parivahan</h3>
-      <p>Driving licence & vehicle services</p>
-      <a href="https://parivahan.gov.in/" target="_blank">
-        Open Official Website →
-      </a>
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- APPLY -->
-<section id="apply">
-
-  <h2 class="title">
-    Online Service Request
-  </h2>
-
-  <div class="formbox">
-
-    <form id="serviceForm">
-
-      <label for="name">
-        আপনার নাম
-      </label>
-
-      <input
-        id="name"
-        required
-        placeholder="নাম লিখুন"
-      >
-
-
-      <label for="mobile">
-        Mobile Number
-      </label>
-
-      <input
-        id="mobile"
-        required
-        type="tel"
-        pattern="[0-9]{10}"
-        placeholder="10 digit mobile number"
-      >
-
-
-      <label for="service">
-        কোন কাজটি করতে চান?
-      </label>
-
-      <select id="service" required>
-
-        <option value="">
-          Select Service
-        </option>
-
-        <option>Aadhaar Assistance</option>
-        <option>PAN Card</option>
-        <option>Voter Card</option>
-        <option>Ration Card</option>
-        <option>Scholarship</option>
-        <option>School & College</option>
-        <option>Government Form</option>
-        <option>Income Certificate</option>
-        <option>Caste Certificate</option>
-        <option>Domicile Certificate</option>
-        <option>Driving Licence</option>
-        <option>Udyam Registration</option>
-        <option>e-Shram</option>
-        <option>Ayushman Assistance</option>
-        <option>Job Application</option>
-        <option>Admit Card / Result</option>
-        <option>PDF / Form Download</option>
-        <option>Other</option>
-
-      </select>
-
-
-      <label for="message">
-        Additional Details
-      </label>
-
-      <textarea
-        id="message"
-        placeholder="কাজ সম্পর্কে কিছু লিখুন"
-      ></textarea>
-
-
-      <button
-        class="btn submit"
-        type="submit"
-      >
-        📲 WhatsApp-এ Request পাঠান
-      </button>
-
-
-      <p class="small">
-        নোট: এই form আপনার তথ্য WhatsApp-এ পাঠাবে।
-        Sensitive documents শুধুমাত্র প্রয়োজন ও নিরাপদ
-        প্রক্রিয়ায় শেয়ার করুন।
-      </p>
-
-    </form>
-
-  </div>
-
-</section>
-
-
-<!-- UPDATES -->
-<section id="updates">
-
-  <h2 class="title">
-    Latest Updates
-  </h2>
-
-  <div class="notice">
-
-    <ul>
-
-      <li>
-        📢 নতুন online form ও service update এখানে প্রকাশ করুন।
-      </li>
-
-      <li>
-        🎓 Scholarship এবং education-related update এখানে দিতে পারবেন।
-      </li>
-
-      <li>
-        🔍 Application status-check guide নিয়মিত update করুন।
-      </li>
-
-      <li>
-        💼 নতুন Job / Recruitment update এখানে দিতে পারবেন।
-      </li>
-
-    </ul>
-
-  </div>
-
-</section>
-
-
-<!-- CONTACT -->
-<section class="contact" id="contact">
-
-  <h2 class="title">
-    ONLINE BATASI
-  </h2>
-
-  <p>📱 9064039205</p>
-
-  <p>
-    Online Services & Digital Assistance
-  </p>
-
-  <a
-    class="btn wa"
-    href="https://wa.me/919064039205"
-    target="_blank"
-  >
-    WhatsApp Us
-  </a>
-
-  <a
-    class="btn call"
-    href="tel:+919064039205"
-  >
-    Call Now
-  </a>
-
-</section>
-
-
-<footer>
-
-  © 2026 Online Batasi • Digital Service Centre
-
-</footer>
-
-</div>
-
-
-<script>
-
-/* =====================================================
-   SUPABASE CONFIGURATION
-   ===================================================== */
-
-const SUPABASE_URL =
-"https://spsagurykghywjeqliea.supabase.co";
-
-const SUPABASE_PUBLISHABLE_KEY =
-"sb_publishable_4Jhe07IzyuPykmS7JWZZUA_pAJ2_s2j";
-
-const supabaseClient =
-supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_PUBLISHABLE_KEY
-);
-
-
-/* =====================================================
-   AUTH SCREEN
-   ===================================================== */
-
-function showRegister(){
-
-  document.getElementById("loginBox").style.display="none";
-
-  document.getElementById("registerBox").style.display="block";
-
-}
-
-
-function showLogin(){
-
-  document.getElementById("registerBox").style.display="none";
-
-  document.getElementById("loginBox").style.display="block";
-
-}
-
-
-function showMessage(id,text,type){
-
-  const box=document.getElementById(id);
-
-  box.textContent=text;
-
-  box.className="message "+type;
-
-}
-
-
-/* =====================================================
-   REGISTER
-   ===================================================== */
-
-async function registerUser(){
-
-  const name=
-    document.getElementById("registerName").value.trim();
-
-  const email=
-    document.getElementById("registerEmail").value.trim();
-
-  const password=
-    document.getElementById("registerPassword").value;
-
-
-  if(!name || !email || !password){
-
-    showMessage(
-      "registerMessage",
-      "সব তথ্য পূরণ করুন।",
-      "error"
-    );
-
-    return;
-  }
-
-
-  if(password.length < 6){
-
-    showMessage(
-      "registerMessage",
-      "Password কমপক্ষে 6 অক্ষরের হতে হবে।",
-      "error"
-    );
-
-    return;
-  }
-
-
-  showMessage(
-    "registerMessage",
-    "Account তৈরি হচ্ছে...",
-    "success"
-  );
-
-
-  const {data,error} =
-    await supabaseClient.auth.signUp({
-
-      email:email,
-
-      password:password,
-
-      options:{
-        data:{
-          full_name:name
-        },
-
-        emailRedirectTo:
-          "https://ajibul719.github.io/Online-Batasi-/"
+document.addEventListener('DOMContentLoaded', () => {
+
+  // ==========================================
+  // 1. Service Data Array
+  // ==========================================
+  const servicesData = [
+    {
+      id: 'aadhaar-card',
+      name: 'Aadhaar Card',
+      category: 'Identity',
+      description: 'Download Aadhaar, check status, address update, and locate enrollment center.',
+      icon: 'fa-id-card',
+      keywords: ['aadhaar', 'aadhar', 'id', 'uidai', 'address', 'download', 'আধার'],
+      officialUrl: 'https://myaadhaar.uidai.gov.in/'
+    },
+    {
+      id: 'pan-card',
+      name: 'PAN Card',
+      category: 'Identity',
+      description: 'Apply for new PAN card, correction, link Aadhaar with PAN.',
+      icon: 'fa-address-card',
+      keywords: ['pan', 'tax', 'nsdl', 'utiitsl', 'income tax', 'প্যান'],
+      officialUrl: 'https://eportal.incometax.gov.in/'
+    },
+    {
+      id: 'voter-card',
+      name: 'Voter Card',
+      category: 'Identity',
+      description: 'Apply for Voter ID, electoral roll correction, and download e-EPIC.',
+      icon: 'fa-check-to-slot',
+      keywords: ['voter', 'election', 'epic', 'eci', 'ভোটার'],
+      officialUrl: 'https://voters.eci.gov.in/'
+    },
+    {
+      id: 'ration-card',
+      name: 'Ration Card',
+      category: 'Ration',
+      description: 'Apply for new ration card, transfer, e-ration card download, and link mobile.',
+      icon: 'fa-wheat-awn',
+      keywords: ['ration', 'food', 'khadya sathi', 'epos', 'রেশন'],
+      officialUrl: 'https://food.wb.gov.in/'
+    },
+    {
+      id: 'birth-certificate',
+      name: 'Birth Certificate',
+      category: 'Certificate',
+      description: 'Apply for birth registration, correction, and download digital certificate.',
+      icon: 'fa-baby',
+      keywords: ['birth', 'janma', 'certificate', 'janma mrityu tathya', 'জন্ম সার্টিফিকেট'],
+      officialUrl: 'https://janmamrityutathya.wb.gov.in/'
+    },
+    {
+      id: 'income-certificate',
+      name: 'Income Certificate',
+      category: 'Certificate',
+      description: 'Apply online for official state income certificate for various uses.',
+      icon: 'fa-file-invoice-dollar',
+      keywords: ['income', 'e-district', 'certificate', 'আয় সনদ'],
+      officialUrl: 'https://edistrict.wb.gov.in/'
+    },
+    {
+      id: 'caste-certificate',
+      name: 'Caste Certificate',
+      category: 'Certificate',
+      description: 'Apply for SC, ST, and OBC caste certificates online.',
+      icon: 'fa-users',
+      keywords: ['caste', 'sc', 'st', 'obc', 'backward classes', 'কাষ্ট সার্টিফিকেট'],
+      officialUrl: 'https://castcertificatewb.gov.in/'
+    },
+    {
+      id: 'domicile-certificate',
+      name: 'Domicile Certificate',
+      category: 'Certificate',
+      description: 'Apply for residential and domicile certificate for education and jobs.',
+      icon: 'fa-house-user',
+      keywords: ['domicile', 'residential', 'e-district', 'বাসস্থানের সার্টিফিকেট'],
+      officialUrl: 'https://edistrict.wb.gov.in/'
+    },
+    {
+      id: 'scholarship',
+      name: 'Scholarship',
+      category: 'Scholarship',
+      description: 'Apply for SVMCM, Aikyashree, Oasis, and Swami Vivekananda scholarships.',
+      icon: 'fa-graduation-cap',
+      keywords: ['scholarship', 'svmcm', 'aikyashree', 'oasis', 'wbmdfc', 'স্কলারশিপ'],
+      officialUrl: 'https://svmcm.wbhed.gov.in/'
+    },
+    {
+      id: 'college-university',
+      name: 'College & University',
+      category: 'Education',
+      description: 'Centralized admission portals, exam portals, and university services.',
+      icon: 'fa-university',
+      keywords: ['college', 'university', 'admission', 'higher education', 'কলেজ', 'ইউনিভার্সিটি'],
+      officialUrl: 'https://banglaruchchashiksha.wb.gov.in/'
+    },
+    {
+      id: 'admit-card',
+      name: 'Admit Card',
+      category: 'Education',
+      description: 'Download exam hall tickets and admit cards for various recruitment & academic exams.',
+      icon: 'fa-ticket',
+      keywords: ['admit', 'hall ticket', 'exam', 'admit card', 'এডমিট কার্ড'],
+      officialUrl: ''
+    },
+    {
+      id: 'result',
+      name: 'Result',
+      category: 'Education',
+      description: 'Check board exam results, university results, and competitive exam marks.',
+      icon: 'fa-square-poll-vertical',
+      keywords: ['result', 'marksheet', 'board exam', 'wbchse', 'wbbse', 'रिजাল্ট', 'ফলাফল'],
+      officialUrl: 'https://wbresults.nic.in/'
+    },
+    {
+      id: 'job-employment',
+      name: 'Job & Employment',
+      category: 'Jobs',
+      description: 'Employment Bank registration, job notifications, and career guidance.',
+      icon: 'fa-briefcase',
+      keywords: ['job', 'employment', 'karmasanjog', 'employment bank', 'চাকরি'],
+      officialUrl: 'https://employmentbankwb.gov.in/'
+    },
+    {
+      id: 'skill-training',
+      name: 'Skill / Training',
+      category: 'Jobs',
+      description: 'Utkarsh Bangla skill development courses and PMKVY training registration.',
+      icon: 'fa-user-gear',
+      keywords: ['skill', 'training', 'utkarsh bangla', 'pmkvy', 'স্কিল ট্রেনিং'],
+      officialUrl: 'https://pbssd.gov.in/'
+    },
+    {
+      id: 'driving-licence',
+      name: 'Driving Licence',
+      category: 'Vehicle',
+      description: 'Apply for learner licence, permanent DL, renewal, and slot booking.',
+      icon: 'fa-id-badge',
+      keywords: ['driving', 'licence', 'dl', 'parivahan', 'sarathi', 'ড্রাইভিং লাইসেন্স'],
+      officialUrl: 'https://sarathi.parivahan.gov.in/'
+    },
+    {
+      id: 'vehicle-services',
+      name: 'Vehicle Services',
+      category: 'Vehicle',
+      description: 'Pay road tax, RC transfer, fitness certificate, and pollution check status.',
+      icon: 'fa-car',
+      keywords: ['vehicle', 'vahan', 'rc', 'tax', 'parivahan', 'গাডি'],
+      officialUrl: 'https://vahan.parivahan.gov.in/'
+    },
+    {
+      id: 'ayushman-bharat',
+      name: 'Ayushman Bharat',
+      category: 'Health',
+      description: 'Apply for PM-JAY Ayushman Card, check hospital network and eligibility.',
+      icon: 'fa-heart-pulse',
+      keywords: ['health', 'ayushman', 'pmjay', 'swasthya sathi', 'হেলথ কার্ড'],
+      officialUrl: 'https://dashboard.pmjay.gov.in/'
+    },
+    {
+      id: 'e-shram',
+      name: 'e-Shram',
+      category: 'Labour',
+      description: 'Registration for unorganized workers, download e-Shram card.',
+      icon: 'fa-person-digging',
+      keywords: ['shram', 'eshram', 'labour', 'worker card', 'ই-শ্রম'],
+      officialUrl: 'https://eshram.gov.in/'
+    },
+    {
+      id: 'udyam-registration',
+      name: 'Udyam Registration',
+      category: 'Business',
+      description: 'Free MSME / Udyam registration for small businesses and enterprises.',
+      icon: 'fa-store',
+      keywords: ['udyam', 'msme', 'business', 'registration', 'উদ্যোগ'],
+      officialUrl: 'https://udyamregistration.gov.in/'
+    },
+    {
+      id: 'government-schemes',
+      name: 'Government Schemes',
+      category: 'Government',
+      description: 'Information and application details for Lakshmir Bhandar, Kanyashree, etc.',
+      icon: 'fa-landmark',
+      keywords: ['scheme', 'lakshmir bhandar', 'kanyashree', 'krishak bandhu', 'সরকারী প্রকল্প'],
+      officialUrl: 'https://wb.gov.in/'
+    },
+    {
+      id: 'pf-uan',
+      name: 'PF / UAN',
+      category: 'Banking',
+      description: 'Check EPFO passbook, activate UAN, file online PF claim, and update KYC.',
+      icon: 'fa-piggy-bank',
+      keywords: ['pf', 'uan', 'epfo', 'provident fund', 'passbook', 'পিএফ'],
+      officialUrl: 'https://www.epfindia.gov.in/'
+    },
+    {
+      id: 'pension',
+      name: 'Pension',
+      category: 'Banking',
+      description: 'Submit Life Certificate (Jeevan Pramaan), track pension status, and details.',
+      icon: 'fa-hand-holding-dollar',
+      keywords: ['pension', 'jeevan pramaan', 'eps', 'pensioner', 'পেনশন'],
+      officialUrl: 'https://jeevanpramaan.gov.in/'
+    },
+    {
+      id: 'banking-services',
+      name: 'Banking Services',
+      category: 'Banking',
+      description: 'Access DBT link status, Aadhaar seeding with bank, and official banking portals.',
+      icon: 'fa-building-columns',
+      keywords: ['bank', 'dbt', 'npci', 'aadhare seeding', 'ব্যাংক'],
+      officialUrl: ''
+    },
+    {
+      id: 'status-check',
+      name: 'Status Check',
+      category: 'Status',
+      description: 'Check status of your online applications across multiple government services.',
+      icon: 'fa-magnifying-glass-chart',
+      keywords: ['status', 'track', 'application status', 'চেক স্ট্যাটাস'],
+      officialUrl: ''
+    },
+    {
+      id: 'form-pdf-download',
+      name: 'Form / PDF Download',
+      category: 'Download',
+      description: 'Download official application forms and offline PDFs for all services.',
+      icon: 'fa-file-pdf',
+      keywords: ['form', 'pdf', 'download', 'offline form', 'ফরম ডাউনলোড'],
+      officialUrl: ''
+    },
+    {
+      id: 'digital-documents',
+      name: 'Digital Documents',
+      category: 'Documents',
+      description: 'Access and download verified documents safely via DigiLocker.',
+      icon: 'fa-folder-closed',
+      keywords: ['digilocker', 'digital document', 'certificate download', 'ডিজিটাল ডকুমেন্ট'],
+      officialUrl: 'https://www.digilocker.gov.in/'
+    },
+    {
+      id: 'online-application',
+      name: 'Online Application',
+      category: 'Government',
+      description: 'Common application portal access for state and central services.',
+      icon: 'fa-laptop-code',
+      keywords: ['apply', 'online application', 'portal', 'অনলাইন আবেদন'],
+      officialUrl: ''
+    }
+  ];
+
+  // Categories List
+  const categoriesList = [
+    'All', 'Identity', 'Ration', 'Certificate', 'Education', 'Scholarship',
+    'Jobs', 'Vehicle', 'Health', 'Labour', 'Business', 'Government',
+    'Banking', 'Status', 'Download', 'Documents'
+  ];
+
+  // State
+  let activeCategory = 'All';
+  let searchQuery = '';
+
+  // DOM Elements
+  const loadingScreen = document.getElementById('loading-screen');
+  const progressBar = loadingScreen ? loadingScreen.querySelector('.progress-bar') : null;
+  const menuToggle = document.querySelector('.menu-toggle');
+  const navLinks = document.getElementById('nav-links');
+  const categoriesGrid = document.getElementById('categories-grid');
+  const servicesGrid = document.getElementById('services-grid');
+  const searchInput = document.getElementById('search-input');
+  const clearSearchBtn = document.getElementById('clear-search');
+  const noResultsEl = document.getElementById('no-results');
+
+  // ==========================================
+  // 2. Loading Screen Animation
+  // ==========================================
+  function handleLoadingScreen() {
+    if (!loadingScreen) return;
+
+    let progress = 0;
+    const interval = setInterval(() => {
+      progress += 5;
+      if (progressBar) {
+        progressBar.style.width = `${progress}%`;
       }
 
-    });
-
-
-  if(error){
-
-    showMessage(
-      "registerMessage",
-      error.message,
-      "error"
-    );
-
-    return;
-  }
-
-
-  showMessage(
-    "registerMessage",
-    "Registration সফল হয়েছে। আপনার Email খুলে verification link-এ click করুন। তারপর Login করুন।",
-    "success"
-  );
-
-}
-
-
-/* =====================================================
-   LOGIN
-   ===================================================== */
-
-async function loginUser(){
-
-  const email=
-    document.getElementById("loginEmail").value.trim();
-
-  const password=
-    document.getElementById("loginPassword").value;
-
-
-  if(!email || !password){
-
-    showMessage(
-      "loginMessage",
-      "Email এবং Password দিন।",
-      "error"
-    );
-
-    return;
-  }
-
-
-  showMessage(
-    "loginMessage",
-    "Login হচ্ছে...",
-    "success"
-  );
-
-
-  const {data,error} =
-    await supabaseClient.auth.signInWithPassword({
-
-      email:email,
-
-      password:password
-
-    });
-
-
-  if(error){
-
-    showMessage(
-      "loginMessage",
-      "Login হয়নি: "+error.message,
-      "error"
-    );
-
-    return;
-  }
-
-
-  showMainSite(data.user);
-
-}
-
-
-/* =====================================================
-   FORGOT PASSWORD
-   ===================================================== */
-
-async function forgotPassword(){
-
-  const email=
-    document.getElementById("loginEmail").value.trim();
-
-
-  if(!email){
-
-    showMessage(
-      "loginMessage",
-      "আগে আপনার Email লিখুন।",
-      "error"
-    );
-
-    return;
-  }
-
-
-  const {error} =
-    await supabaseClient.auth.resetPasswordForEmail(
-      email,
-      {
-        redirectTo:
-        "https://ajibul719.github.io/Online-Batasi-/"
+      if (progress >= 100) {
+        clearInterval(interval);
+        setTimeout(() => {
+          loadingScreen.style.opacity = '0';
+          loadingScreen.style.transition = 'opacity 0.4s ease';
+          setTimeout(() => {
+            loadingScreen.style.display = 'none';
+          }, 400);
+        }, 200);
       }
-    );
-
-
-  if(error){
-
-    showMessage(
-      "loginMessage",
-      error.message,
-      "error"
-    );
-
-    return;
+    }, 20);
   }
 
+  handleLoadingScreen();
 
-  showMessage(
-    "loginMessage",
-    "Password reset করার link আপনার Email-এ পাঠানো হয়েছে।",
-    "success"
-  );
+  // ==========================================
+  // 3. Mobile Menu Handling
+  // ==========================================
+  if (menuToggle && navLinks) {
+    const icon = menuToggle.querySelector('i');
 
-}
+    function toggleMenu() {
+      navLinks.classList.toggle('active');
+      const isOpen = navLinks.classList.contains('active');
 
-
-/* =====================================================
-   LOGOUT
-   ===================================================== */
-
-async function logoutUser(){
-
-  await supabaseClient.auth.signOut();
-
-  document.getElementById("mainSite").style.display="none";
-
-  document.getElementById("authSection").style.display="flex";
-
-  showLogin();
-
-}
-
-
-/* =====================================================
-   SHOW MAIN SITE
-   ===================================================== */
-
-function showMainSite(user){
-
-  document.getElementById("authSection").style.display="none";
-
-  document.getElementById("mainSite").style.display="block";
-
-
-  const email =
-    user?.email || "User";
-
-
-  document.getElementById("userEmail").textContent=email;
-
-}
-
-
-/* =====================================================
-   CHECK LOGIN SESSION
-   ===================================================== */
-
-async function checkSession(){
-
-  const {data} =
-    await supabaseClient.auth.getSession();
-
-
-  if(data.session){
-
-    showMainSite(data.session.user);
-
-  }else{
-
-    document.getElementById("authSection").style.display="flex";
-
-  }
-
-}
-
-
-/* =====================================================
-   AUTH STATE CHANGE
-   ===================================================== */
-
-supabaseClient.auth.onAuthStateChange(
-  (event,session)=>{
-
-    if(session){
-
-      showMainSite(session.user);
-
-    }else{
-
-      document.getElementById("mainSite").style.display="none";
-
-      document.getElementById("authSection").style.display="flex";
-
+      if (icon) {
+        if (isOpen) {
+          icon.classList.remove('fa-bars');
+          icon.classList.add('fa-xmark');
+        } else {
+          icon.classList.remove('fa-xmark');
+          icon.classList.add('fa-bars');
+        }
+      }
     }
 
-  }
-);
-
-
-/* =====================================================
-   SERVICE SEARCH
-   ===================================================== */
-
-function searchServices(){
-
-  const search=
-    document.getElementById("serviceSearch")
-    .value
-    .toLowerCase()
-    .trim();
-
-
-  const cards=
-    document.querySelectorAll(".service-card");
-
-
-  cards.forEach(card=>{
-
-    const text=
-      card.innerText.toLowerCase();
-
-
-    if(text.includes(search)){
-
-      card.style.display="block";
-
-    }else{
-
-      card.style.display="none";
-
+    function closeMenu() {
+      if (navLinks.classList.contains('active')) {
+        navLinks.classList.remove('active');
+        if (icon) {
+          icon.classList.remove('fa-xmark');
+          icon.classList.add('fa-bars');
+        }
+      }
     }
 
+    menuToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleMenu();
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!navLinks.contains(e.target) && !menuToggle.contains(e.target)) {
+        closeMenu();
+      }
+    });
+
+    const allNavLinks = navLinks.querySelectorAll('a');
+    allNavLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        closeMenu();
+      });
+    });
+  }
+
+  // ==========================================
+  // 4. Reusable IntersectionObserver for Scroll Animation
+  // ==========================================
+  let globalObserver = null;
+
+  if ('IntersectionObserver' in window) {
+    globalObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.15
+    });
+  }
+
+  function observeRevealElements() {
+    const reveals = document.querySelectorAll('.reveal:not(.active)');
+    reveals.forEach(el => {
+      if (globalObserver) {
+        globalObserver.observe(el);
+      } else {
+        el.classList.add('active');
+      }
+    });
+  }
+
+  // ==========================================
+  // 5. Navigation Smooth Scroll & Active Link
+  // ==========================================
+  const navAnchorLinks = document.querySelectorAll('.nav-link, #nav-links a');
+  navAnchorLinks.forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      const targetId = this.getAttribute('href');
+      if (targetId && targetId.startsWith('#')) {
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+          e.preventDefault();
+          targetElement.scrollIntoView({
+            behavior: 'smooth'
+          });
+
+          navAnchorLinks.forEach(l => l.classList.remove('active'));
+          this.classList.add('active');
+        }
+      }
+    });
   });
 
-}
+  // ==========================================
+  // 6. Categories Rendering
+  // ==========================================
+  function renderCategories() {
+    if (!categoriesGrid) return;
+    categoriesGrid.innerHTML = '';
 
+    categoriesList.forEach(cat => {
+      const btn = document.createElement('button');
+      btn.className = `category-btn ${cat === activeCategory ? 'active' : ''}`;
+      btn.textContent = cat;
+      btn.type = 'button';
 
-/* =====================================================
-   CATEGORY FILTER
-   ===================================================== */
+      btn.addEventListener('click', () => {
+        activeCategory = cat;
+        const allBtns = categoriesGrid.querySelectorAll('.category-btn');
+        allBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
 
-function filterCategory(category,button){
+        filterAndRenderServices();
+      });
 
-  document
-    .querySelectorAll(".category-btn")
-    .forEach(btn=>{
-      btn.classList.remove("active");
+      categoriesGrid.appendChild(btn);
+    });
+  }
+
+  // ==========================================
+  // 7. Services Rendering & Search Filtering
+  // ==========================================
+  function filterAndRenderServices() {
+    if (!servicesGrid) return;
+
+    const query = searchQuery.toLowerCase().trim();
+
+    const filtered = servicesData.filter(service => {
+      const matchesCategory = (activeCategory === 'All') || 
+                              (service.category.toLowerCase() === activeCategory.toLowerCase());
+
+      const matchesSearch = !query || 
+        service.name.toLowerCase().includes(query) ||
+        service.category.toLowerCase().includes(query) ||
+        service.description.toLowerCase().includes(query) ||
+        service.keywords.some(k => k.toLowerCase().includes(query));
+
+      return matchesCategory && matchesSearch;
     });
 
+    servicesGrid.innerHTML = '';
 
-  button.classList.add("active");
-
-
-  document
-    .querySelectorAll(".service-card")
-    .forEach(card=>{
-
-      if(
-        category==="all" ||
-        card.dataset.category===category
-      ){
-
-        card.style.display="block";
-
-      }else{
-
-        card.style.display="none";
-
+    if (filtered.length === 0) {
+      if (noResultsEl) {
+        noResultsEl.style.display = 'block';
+        noResultsEl.removeAttribute('hidden');
+      }
+    } else {
+      if (noResultsEl) {
+        noResultsEl.style.display = 'none';
+        noResultsEl.setAttribute('hidden', 'true');
       }
 
-    });
+      filtered.forEach(service => {
+        const card = document.createElement('div');
+        card.className = 'service-card reveal';
 
+        const hasValidUrl = service.officialUrl && service.officialUrl.trim() !== '';
 
-  document.getElementById("serviceSearch").value="";
+        const buttonHtml = hasValidUrl 
+          ? `<a href="${service.officialUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+              Official Website <i class="fa-solid fa-arrow-up-right-from-square"></i>
+             </a>`
+          : `<button class="btn btn-disabled" disabled>
+              Official link coming soon
+             </button>`;
 
-}
+        card.innerHTML = `
+          <div class="card-icon">
+            <i class="fa-solid ${service.icon}"></i>
+          </div>
+          <span class="card-category">${service.category}</span>
+          <h3 class="card-title">${service.name}</h3>
+          <p class="card-description">${service.description}</p>
+          <div class="card-footer">
+            ${buttonHtml}
+          </div>
+        `;
 
+        servicesGrid.appendChild(card);
+      });
 
-/* =====================================================
-   WHATSAPP SERVICE FORM
-   ===================================================== */
-
-document
-  .getElementById("serviceForm")
-  .addEventListener(
-    "submit",
-    function(e){
-
-      e.preventDefault();
-
-
-      const name=
-        document.getElementById("name")
-        .value
-        .trim();
-
-
-      const mobile=
-        document.getElementById("mobile")
-        .value
-        .trim();
-
-
-      const service=
-        document.getElementById("service")
-        .value;
-
-
-      const message=
-        document.getElementById("message")
-        .value
-        .trim();
-
-
-      const text=
-        "Hello Online Batasi,%0A%0A"+
-        "Name: "+
-        encodeURIComponent(name)+
-        "%0A"+
-        "Mobile: "+
-        encodeURIComponent(mobile)+
-        "%0A"+
-        "Service: "+
-        encodeURIComponent(service)+
-        "%0A"+
-        "Details: "+
-        encodeURIComponent(
-          message || "N/A"
-        );
-
-
-      window.open(
-        "https://wa.me/919064039205?text="+text,
-        "_blank"
-      );
-
+      observeRevealElements();
     }
-  );
-
-
-/* =====================================================
-   START
-   ===================================================== */
-
-window.addEventListener(
-  "load",
-  function(){
-
-    setTimeout(
-      checkSession,
-      800
-    );
-
   }
-);
 
-</script>
+  // ==========================================
+  // 8. Search Input & Clear Search Handling
+  // ==========================================
+  function updateClearButtonState() {
+    if (!clearSearchBtn) return;
+    if (searchQuery.trim().length > 0) {
+      clearSearchBtn.style.display = 'inline-block';
+      clearSearchBtn.removeAttribute('hidden');
+    } else {
+      clearSearchBtn.style.display = 'none';
+      clearSearchBtn.setAttribute('hidden', 'true');
+    }
+  }
 
-</body>
-</html>
+  if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+      searchQuery = e.target.value;
+      updateClearButtonState();
+      filterAndRenderServices();
+    });
+  }
+
+  if (clearSearchBtn) {
+    clearSearchBtn.addEventListener('click', () => {
+      if (searchInput) {
+        searchInput.value = '';
+      }
+      searchQuery = '';
+      updateClearButtonState();
+      filterAndRenderServices();
+    });
+  }
+
+  // ==========================================
+  // Initial Execution
+  // ==========================================
+  renderCategories();
+  updateClearButtonState();
+  filterAndRenderServices();
+  observeRevealElements();
+
+});
+    
+
+      
+
+  
+
+
+      
